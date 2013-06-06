@@ -25,9 +25,9 @@ class Connector(object):
         if not config:
             raise RuntimeError("No configuration file provided")
 
-        jenkins_instance_url = config.get('config', 'url')
-        jenkins_user = config.get('config','username')
-        jenkins_passwd = config.get('config', 'password')
+        jenkins_instance_url = config.get('defaults', 'url')
+        jenkins_user = config.get('defaults','username')
+        jenkins_passwd = config.get('defaults', 'password')
 
         self.config = config
         self.connection = jenkins.Jenkins(baseurl=jenkins_instance_url,
@@ -36,7 +36,7 @@ class Connector(object):
     def get_job(self):
         """get job
         """
-        test_job = self.config.get('config', 'job')
+        test_job = self.config.get('defaults', 'job')
         return self.connection.get_job(jobname=test_job)
 
     def get_raw_result(self):

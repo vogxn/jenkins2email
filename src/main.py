@@ -23,6 +23,10 @@ from os import path
 PROPERTIES_FILE='jmail.cfg'
 
 if __name__ == '__main__':
-    cfg = SafeConfigParser.read(PROPERTIES_FILE)
-    ctor = Connector(cfg)
-    result = ctor.get_result()
+    config = SafeConfigParser()
+    config.read(PROPERTIES_FILE)
+    ctor = Connector(config)
+    report = ctor.get_result()
+
+    prsr = Parser()
+    prsr.format(report)
