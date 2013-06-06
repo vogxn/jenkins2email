@@ -14,3 +14,34 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    try:
+        from distribute_setup import use_setuptools
+        use_setuptools()
+        from setuptools import setup, find_packages
+    except ImportError:
+        raise RuntimeError("python setuptools is required")
+
+VERSION = '0.1.0'
+
+import os
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read().strip()
+
+setup(name="Jenkins2Email",
+    version=VERSION,
+    description="Jenkins2Email - Convert Jenkins Test Result to PlainText Email",
+    author="Prasanna Santhanam",
+    author_email="tsp@apache.org",
+    long_description="Jenkins2Email - Convert Jenkins Test Result to PlainText Email",
+    platforms=("Any",),
+    packages=["src"],
+    license="ASLv2",
+    install_requires=[
+        "jenkinsapi"
+    ],
+    zip_safe=True,
+)
