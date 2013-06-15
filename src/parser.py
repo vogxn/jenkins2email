@@ -16,7 +16,6 @@
 # under the License.
 
 from tabulate import tabulate
-from urlparse import urlsplit
 
 class Parser(object):
 
@@ -46,11 +45,11 @@ class Parser(object):
 
         suite_details = self.report['childReports']
         for suite in suite_details:
-            url = suite['child']['url']
-            fragments = urlsplit(url, scheme='http')
             self.number = suite['child']['number']
+            #FIXME: This custom name building logic might not always work
+            suite_name = suite['child']['url'].split("suite=")[-1].split(str(self.number))[0]
             suite_summary = {}
             suite_summary['pass'] = suite['result']['passCount']
             suite_summary['fail'] = suite['result']['failCount']
             suite_summary['skip'] = suite['result']['skipCount']
-            self.table.append([fragments[2], suite_summary['pass'], suite_summary['fail'], suite_summary['skip']])
+            self.table.append([suite_name, suite_summary['pass'], suite_summary['fail'], suite_summary['skip']])
