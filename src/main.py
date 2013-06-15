@@ -16,8 +16,10 @@
 # under the License.
 
 from ConfigParser import SafeConfigParser
+from argparse import ArgumentParser
 from connector import Connector
 from parser import Parser
+from os import path
 
 PROPERTIES_FILE='jmail.cfg'
 
@@ -32,4 +34,12 @@ def main():
     prsr.format()
 
 if __name__ == '__main__':
+    opts = ArgumentParser()
+    opts.add_argument("-c","--config",dest="config",help="Path to configuration file")
+    args = opts.parse_args()
+
+    if args.config and path.exists(args.config):
+        PROPERTIES_FILE = args.config
+    else:
+        raise RuntimeError("Need a configuration file")
     main()
