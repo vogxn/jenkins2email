@@ -45,4 +45,8 @@ setup(name="Jenkins2Email",
         "tabulate"
     ],
     zip_safe=True,
+    entry_points="""
+    [console_scripts]
+    jenkins2email = src.main:main
+    """
 )

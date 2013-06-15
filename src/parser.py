@@ -23,8 +23,12 @@ class Parser(object):
         self.summary = {}
         self.report = {}
         self.header = ["name", "pass", "fail", "skip"]
-        self.table = []
         self.number = 0 #build number
+
+        self.table = [] #table holding overall summary
+        self.fixed = [] #table holding fixed tests
+        self.regressions = [] #table for regressions
+        self.failures = [] #table for failures
 
     def format(self):
         """Format into table for plaintext output"""
@@ -35,6 +39,19 @@ class Parser(object):
         print "{}:{}".format("Skip ", self.summary['skip'])
         print "--------\n"
         print tabulate(self.table, headers=self.header, tablefmt="plain")
+        print "--------\n"
+
+        print "\nRegressions"
+        print "--------"
+        print tabulate(self.regressions, headers=["name", "duration", "age"], tablefmt="plain")
+
+        print "\nFailures"
+        print "--------"
+        print tabulate(self.failures, headers=["name", "duration", "age"], tablefmt="plain")
+
+        print "\nFixed"
+        print "--------"
+        print tabulate(self.fixed, headers=["name", "duration", "age"], tablefmt="plain")
 
     def parse(self, report):
         """Parse report JSON from jenkins for tabulate processing"""
@@ -53,3 +70,23 @@ class Parser(object):
             suite_summary['fail'] = suite['result']['failCount']
             suite_summary['skip'] = suite['result']['skipCount']
             self.table.append([suite_name, suite_summary['pass'], suite_summary['fail'], suite_summary['skip']])
+
+            suites = suite['result']['suites']
+            for suit in suites:
+                for case in suit['cases']:
+                    if case['status'] == "REGRESSION":
+                        self.regressions.append(["{}.{}".format(case['className'], case['name']),
+                                                 case['duration'],
+                                                 case['age']
+                        ])
+                    elif case['status'] == "FAILED":
+                        self.failures.append(["{}.{}".format(case['className'], case['name']),
+                                                 case['duration'],
+                                                 case['age']
+                        ])
+                    elif case['status'] == "FIXED":
+                        self.fixed.append(["{}.{}".format(case['className'], case['name']),
+                                                 case['duration'],
+                                                 case['age']
+                        ])
+

@@ -18,11 +18,10 @@
 from ConfigParser import SafeConfigParser
 from connector import Connector
 from parser import Parser
-from os import path
 
 PROPERTIES_FILE='jmail.cfg'
 
-if __name__ == '__main__':
+def main():
     config = SafeConfigParser()
     config.read(PROPERTIES_FILE)
     ctor = Connector(config)
@@ -31,3 +30,6 @@ if __name__ == '__main__':
     prsr = Parser()
     prsr.parse(report)
     prsr.format()
+
+if __name__ == '__main__':
+    main()
