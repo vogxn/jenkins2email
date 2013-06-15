@@ -29,4 +29,5 @@ if __name__ == '__main__':
     report = ctor.get_result()
 
     prsr = Parser()
-    prsr.format(report)
+    prsr.parse(report)
+    prsr.format()

@@ -15,16 +15,42 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from tabulate import tabulate
+from urlparse import urlsplit
+
 class Parser(object):
 
     def __init__(self):
-        pass
+        self.summary = {}
+        self.report = {}
+        self.header = ["name", "pass", "fail", "skip"]
+        self.table = []
+        self.number = 0 #build number
 
-    def parse(self):
-        pass
+    def format(self):
+        """Format into table for plaintext output"""
+        print "Test Run: #{}".format(self.number)
+        print "--------"
+        print "{}:{}".format("Total", self.summary['total'])
+        print "{}:{}".format("Fail ", self.summary['fail'])
+        print "{}:{}".format("Skip ", self.summary['skip'])
+        print "--------\n"
+        print tabulate(self.table, headers=self.header, tablefmt="plain")
 
+    def parse(self, report):
+        """Parse report JSON from jenkins for tabulate processing"""
+        self.report = report
+        self.summary['total'] = self.report['totalCount']
+        self.summary['fail'] = self.report['failCount']
+        self.summary['skip'] = self.report['skipCount']
 
-
-
-
-
+        suite_details = self.report['childReports']
+        for suite in suite_details:
+            url = suite['child']['url']
+            fragments = urlsplit(url, scheme='http')
+            self.number = suite['child']['number']
+            suite_summary = {}
+            suite_summary['pass'] = suite['result']['passCount']
+            suite_summary['fail'] = suite['result']['failCount']
+            suite_summary['skip'] = suite['result']['skipCount']
+            self.table.append([fragments[2], suite_summary['pass'], suite_summary['fail'], suite_summary['skip']])

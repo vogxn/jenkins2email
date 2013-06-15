@@ -41,7 +41,8 @@ setup(name="Jenkins2Email",
     packages=["src"],
     license="ASLv2",
     install_requires=[
-        "jenkinsapi"
+        "jenkinsapi",
+        "tabulate"
     ],
     zip_safe=True,
 )
