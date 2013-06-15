@@ -44,8 +44,11 @@ class Connector(object):
         """
         if self.connection:
             last_good_build = self.get_job().get_last_good_build()
-            if last_good_build:
-                return last_good_build.get_data(last_good_build.get_result_url())
+
+            if last_good_build and last_good_build.has_resultset():
+                return last_good_build.get_resultset()._data
+            else:
+                return EnvironmentError("No tests have run")
         else:
             raise RuntimeError("Connection lost")
 
